@@ -1,7 +1,7 @@
 ---
 title: "Your agent should not be holding your GitHub token"
 seoTitle: "Strip GH_TOKEN from your coding agent: environment filtering and phantom tokens in nono"
-date: "2026-09-01"
+date: "2026-08-27"
 description: "nono passes your whole environment to the sandboxed process by default, GH_TOKEN included. Here is the three-line fix, and what the tool gets handed instead."
 excerpt: "If you have GH_TOKEN exported and a coding agent running, the agent has your token. nono's session sandbox passes the environment through by default. This is the three-line fix, the phantom token the tool receives instead, and an honest account of what none of it protects you from."
 author: "Sal Kimmich"
@@ -31,7 +31,7 @@ That is not an obscure edge case. It is the default state of any profile that ne
 
 Now the asymmetry, which is the thing to hold onto.
 
-A mediated command running through the tool sandbox gets its own environment filter, declared per command instead of per session. That distinction is the subject of [the first post in this series](/blog/enforcement-unit-is-the-tool-call), so I will not rebuild it here. Its default points the other way: with no `environment` block on the command policy, the tool sandbox falls back to a fixed allow-list of twenty-two entries. `PATH`, `HOME`, `TERM`, the locale variables, the proxy and CA-bundle variables. `GH_TOKEN` is not on it.
+A mediated command running through the tool sandbox gets its own environment filter, declared per command instead of per session. That is the difference between a session sandbox and a per-call broker: the session gets one capability envelope for its whole lifetime, and each brokered tool call gets a fresh child sandbox scoped to that call alone. Its default points the other way: with no `environment` block on the command policy, the tool sandbox falls back to a fixed allow-list of twenty-two entries. `PATH`, `HOME`, `TERM`, the locale variables, the proxy and CA-bundle variables. `GH_TOKEN` is not on it.
 
 The surface your agent runs on is open by default. The surface your tools run on is closed by default.
 
